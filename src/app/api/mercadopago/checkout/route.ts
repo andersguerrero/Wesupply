@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
   const pendingUrl = base + "/checkout/failure";
   const webhookUrl = base + "/api/mercadopago/webhook";
   const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/i.test(baseUrl);
+  const isSandbox = MP_ACCESS_TOKEN?.startsWith("TEST-");
 
   const preference: Record<string, unknown> = {
     items: items.map((i: { title: string; quantity: number; unit_price: number; currency_id?: string }) => {
@@ -120,8 +121,8 @@ export async function POST(req: NextRequest) {
     };
   }
 
-  // Con localhost, MP rechaza auto_return (exige dominio público). En prod sí lo usamos.
-  if (!isLocalhost) {
+  // Con localhost, MP rechaza auto_return (exige dominio público). En sandbox no usar auto_return (causa redirect loop).
+  if (!isLocalhost && !isSandbox) {
     preference.auto_return = "approved";
   }
 
@@ -145,9 +146,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const preferenceId = data.id;
-    const initPoint = data.sandbox_init_point ?? data.init_point;
-    return Response.json({ preference_id: preferenceId, init_point: initPoint });
+    const initPoint = isSandbox ? data.sandbox_init_point : data.init_point;
+    return Response.json({ init_point: initPoint });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Error al conectar con Mercado Pago";
     return Response.json({ error: msg }, { status: 500 });

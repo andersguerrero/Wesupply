@@ -1,17 +1,31 @@
 "use client";
 
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useCart } from "@/context/CartContext";
 
 export default function CheckoutSuccessPage() {
+  const searchParams = useSearchParams();
   const { clearCart } = useCart();
 
   useEffect(() => {
     clearCart();
   }, [clearCart]);
+
+  // Sincronizar pedido si el webhook no lo guardó (fallback)
+  useEffect(() => {
+    const paymentId = searchParams.get("payment_id");
+    if (paymentId) {
+      fetch("/api/mercadopago/sync-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ payment_id: Number(paymentId) }),
+      }).catch(() => {});
+    }
+  }, [searchParams]);
 
   return (
     <>
@@ -30,7 +44,7 @@ export default function CheckoutSuccessPage() {
             ¡Gracias por tu compra!
           </h1>
           <p className="mt-3 text-[var(--brand-black)]/70">
-            Tu pago fue procesado correctamente. Te enviamos un email con los detalles del pedido.
+            Tu pago fue procesado correctamente. Recibirás un email con los detalles del pedido.
           </p>
           <Link
             href="/"

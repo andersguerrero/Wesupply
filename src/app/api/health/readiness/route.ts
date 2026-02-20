@@ -9,11 +9,12 @@ export async function GET() {
 
   const checks = {
     mercadopago: !!process.env.MERCADOPAGO_ACCESS_TOKEN?.trim(),
+    mercadopagoPublicKey: !!process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY?.trim(),
     siteUrl: !!baseUrl && baseUrl.startsWith("http") && !baseUrl.endsWith("/"),
     blob: !!process.env.BLOB_READ_WRITE_TOKEN?.trim(),
   };
 
-  const allOk = checks.mercadopago && checks.siteUrl && (checks.blob || !isVercel);
+  const allOk = checks.mercadopago && checks.mercadopagoPublicKey && checks.siteUrl && (checks.blob || !isVercel);
 
   return Response.json(
     {

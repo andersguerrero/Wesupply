@@ -64,6 +64,7 @@ En **Settings** → **Environment Variables** agregar:
 |----------|-------|
 | `BLOB_READ_WRITE_TOKEN` | Se agrega solo al crear el Blob Store |
 | `MERCADOPAGO_ACCESS_TOKEN` | Token de tu app en Mercado Pago |
+| `NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY` | Public Key de tu app en Mercado Pago (para Checkout Bricks) |
 | `ADMIN_PASSWORD` | Contraseña del admin |
 | `NEXT_PUBLIC_SITE_URL` | `https://tu-proyecto.vercel.app` (ajustar después del primer deploy) |
 

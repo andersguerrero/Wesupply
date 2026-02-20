@@ -2,11 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useCart } from "@/components/CartContext";
 import CartItem from "@/components/CartItem";
 import { formatMoney } from "@/lib/formatMoney";
+import PaymentBrick from "@/components/PaymentBrick";
 
 type ShippingQuote = {
   carrierId: string;
@@ -70,8 +72,11 @@ const INITIAL_FORM: CheckoutForm = {
 };
 
 export default function CheckoutPage() {
+  const router = useRouter();
   const { items, subtotal, removeItem, updateQuantity } = useCart();
   const [form, setForm] = useState<CheckoutForm>(INITIAL_FORM);
+  const [step, setStep] = useState<"form" | "payment">("form");
+  const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shippingQuotes, setShippingQuotes] = useState<ShippingQuote[]>([]);
@@ -192,10 +197,13 @@ export default function CheckoutPage() {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Error al crear el checkout");
-      if (data.init_point) {
+      if (data.preference_id) {
+        setPreferenceId(data.preference_id);
+        setStep("payment");
+      } else if (data.init_point) {
         window.location.href = data.init_point;
       } else {
-        throw new Error("No se obtuvo URL de pago");
+        throw new Error("No se obtuvo preferencia de pago");
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error al procesar");
@@ -242,6 +250,29 @@ export default function CheckoutPage() {
             ← Volver al inicio
           </Link>
 
+          {step === "payment" && preferenceId ? (
+            <div className="space-y-6">
+              <div className="rounded-2xl bg-white p-5 shadow-sm sm:p-6">
+                <h2 className="mb-4 text-lg font-semibold text-[var(--brand-black)]">
+                  Completá el pago con tu tarjeta
+                </h2>
+                <PaymentBrick
+                  preferenceId={preferenceId}
+                  amount={subtotal + (selectedQuote?.price ?? 0)}
+                  onSuccess={() => router.push("/checkout/success")}
+                  onError={(msg) => setError(msg)}
+                />
+              </div>
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              <button
+                type="button"
+                onClick={() => setStep("form")}
+                className="text-sm text-[var(--brand-black)]/60 hover:text-[var(--brand-black)]"
+              >
+                ← Volver a los datos
+              </button>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
             <div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
               {/* Formulario */}
@@ -534,6 +565,7 @@ export default function CheckoutPage() {
               </div>
             </div>
           </form>
+          )}
         </div>
       </main>
       <Footer />

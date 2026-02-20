@@ -145,8 +145,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const preferenceId = data.id;
     const initPoint = data.sandbox_init_point ?? data.init_point;
-    return Response.json({ init_point: initPoint });
+    return Response.json({ preference_id: preferenceId, init_point: initPoint });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Error al conectar con Mercado Pago";
     return Response.json({ error: msg }, { status: 500 });

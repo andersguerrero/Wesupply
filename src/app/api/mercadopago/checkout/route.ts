@@ -83,9 +83,6 @@ export async function POST(req: NextRequest) {
       pending: pendingUrl,
     },
     notification_url: webhookUrl,
-    payment_methods: {
-      excluded_payment_types: [{ id: "account_money" }],
-    },
   };
 
   if (body.payer && typeof body.payer === "object") {

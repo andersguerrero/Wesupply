@@ -508,23 +508,25 @@ export default function CheckoutPage() {
                   <p className="mt-2 text-center text-xs text-[var(--brand-black)]/50">
                     Pago seguro con Mercado Pago
                   </p>
-                  <details className="mt-2">
-                    <summary className="cursor-pointer text-center text-xs text-[var(--brand-black)]/40 hover:text-[var(--brand-black)]/60">
-                      Modo prueba: tarjetas y datos
+                  <details className="mt-2" open>
+                    <summary className="cursor-pointer text-center text-xs font-medium text-[var(--brand-black)]/60 hover:text-[var(--brand-black)]/80">
+                      Modo prueba: datos para que habilite el botón Pagar
                     </summary>
-                    <div className="mt-2 rounded-lg bg-[var(--brand-gray)]/80 p-3 text-left text-[11px] text-[var(--brand-black)]/70">
-                      <p className="mb-1 font-medium">Tarjetas de prueba (Argentina):</p>
-                      <p>Master: 5031 7557 3453 0604 | Visa: 4509 9535 6623 3704</p>
-                      <p>CVV: 123 | Vto: 11/30</p>
-                      <p className="mt-1 font-medium">Importante para que habilite el botón:</p>
-                      <p>Titular: <strong>APRO</strong> | DNI: <strong>12345678</strong></p>
-                      <p className="mt-1">
-                        Usá ventana incógnito e iniciá sesión en{" "}
+                    <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50/80 p-3 text-left text-[11px] text-[var(--brand-black)]/80">
+                      <p className="mb-2 font-semibold text-amber-800">Para que el botón Pagar se habilite en MP:</p>
+                      <ul className="list-inside list-disc space-y-0.5">
+                        <li>Tarjeta: 5031 7557 3453 0604 (Master) o 4509 9535 6623 3704 (Visa)</li>
+                        <li>CVV: 123 · Vencimiento: 11/30</li>
+                        <li>Tipo doc: <strong>DNI</strong> · Número: <strong>12345678</strong></li>
+                        <li>Nombre y apellido del titular: <strong>APRO</strong> (exactamente así)</li>
+                      </ul>
+                      <p className="mt-2 text-amber-800">
+                        Usá ventana incógnito. Antes de pagar, iniciá sesión en{" "}
                         <a
                           href="https://sandbox.mercadopago.com.ar"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="underline"
+                          className="underline font-medium"
                         >
                           sandbox.mercadopago.com.ar
                         </a>{" "}

@@ -1,0 +1,148 @@
+[
+  {
+    "slug": "cintas",
+    "label": "Cintas",
+    "title": "Cintas para embalaje",
+    "shortTitle": "Cintas",
+    "description": "Cintas adhesivas para cierre de cajas, paquetes y envíos.",
+    "productHandles": [
+      "ws100-cinta-embalar-transparente-48x100m",
+      "ws101-cinta-embalar-marron-48x100m",
+      "ws102-cinta-embalar-fragil-48x50m",
+      "ws103-cinta-antideslizante-50x18m",
+      "ws104-cinta-papel-24x50m",
+      "ws105-cinta-papel-48x50m",
+      "ws106-cinta-doble-faz-nano-tape-25x5m"
+    ],
+    "hero": {
+      "headline": "Cintas para embalaje",
+      "subheadline": "Cierre seguro de cajas y paquetes. Rollos de alta resistencia.",
+      "image": "/images/hero/hero-embalaje.webp"
+    },
+    "comparisonTable": {
+      "headers": [
+        "Producto",
+        "Ancho",
+        "Longitud"
+      ],
+      "rows": [
+        {
+          "label": "Pack 6 rollos",
+          "values": [
+            "48 mm",
+            "100 m c/u"
+          ]
+        }
+      ]
+    },
+    "applications": [
+      {
+        "title": "Cierre de cajas",
+        "desc": "Sellado de cartones para envío."
+      }
+    ],
+    "faq": [
+      {
+        "id": "c1",
+        "question": "¿Qué ancho necesito?",
+        "answer": "Para cajas estándar, 48 mm es el más versátil."
+      }
+    ]
+  },
+  {
+    "slug": "panos-textiles",
+    "label": "Paños y textiles",
+    "title": "Paños y textiles",
+    "shortTitle": "Paños",
+    "description": "Paños de microfibra y repasadores de cocina.",
+    "productHandles": [
+      "ws200-panos-microfibra-10pcs",
+      "ws201-repasador-cocina-5-patrones"
+    ],
+    "hero": {
+      "headline": "Paños y textiles",
+      "subheadline": "Calidad y durabilidad.",
+      "image": "/images/products/panio-joyeria-2.webp"
+    },
+    "applications": [],
+    "faq": []
+  },
+  {
+    "slug": "tanzas",
+    "label": "Tanzas",
+    "title": "Jardinería.",
+    "shortTitle": "Tanzas",
+    "description": "Tanzas bordeadoras para distintos usos.",
+    "productHandles": [
+      "ws400-tanza-bordeadora-cuadrada-3mm",
+      "ws401-tanza-bordeadora-cuadrada-2-5mm",
+      "ws402-tanza-bordeadora-redonda-2-5mm",
+      "ws403-tanza-bordeadora-redonda-3mm"
+    ],
+    "hero": {
+      "headline": "Tanzas",
+      "subheadline": "Cuadradas y redondas.",
+      "image": "/images/products/tanza-cuadrada-2.webp"
+    },
+    "applications": [],
+    "faq": []
+  },
+  {
+    "slug": "etiquetas",
+    "label": "Etiquetas",
+    "title": "Etiquetas",
+    "shortTitle": "Etiquetas",
+    "description": "Etiquetas térmicas para logística.",
+    "productHandles": [
+      "ws500-etiquetas-termicas-100x150-330pcs",
+      "ws501-etiquetas-termicas-50x76-500pcs"
+    ],
+    "hero": {
+      "headline": "Etiquetas",
+      "subheadline": "Etiquetas térmicas para impresoras.",
+      "image": "/images/products/etiquetas-termicas-2.webp"
+    },
+    "applications": [],
+    "faq": []
+  },
+  {
+    "slug": "embalaje",
+    "label": "Embalaje y envío",
+    "title": "Embalaje y envío",
+    "shortTitle": "Embalaje",
+    "description": "Cajas, bolsas y materiales para envío.",
+    "productHandles": [
+      "ws600-caja-10pcs-empacado-vacio-bomba",
+      "ws601-5-bolsas-empacado-vacio-bomba",
+      "ws602-joyeros",
+      "ws603-5-bolsas-50x70cm-bomba",
+      "ws604-bolsas-aire-vino"
+    ],
+    "hero": {
+      "headline": "Embalaje y envío",
+      "subheadline": "Todo para tu logística.",
+      "image": "/images/products/caja-36cintas-2.webp"
+    },
+    "applications": [],
+    "faq": []
+  },
+  {
+    "slug": "exhibidores",
+    "label": "Soportes",
+    "title": "Soportes",
+    "shortTitle": "Soportes",
+    "description": "Exhibidores y soportes para retail.",
+    "productHandles": [
+      "ws700-exhibidor-antecojos",
+      "ws701-soporte-starlink",
+      "ws702-soporte"
+    ],
+    "hero": {
+      "headline": "Soportes",
+      "subheadline": "Presentación profesional.",
+      "image": "/images/hero/1771532004534-1xvwtjc4.png"
+    },
+    "applications": [],
+    "faq": []
+  }
+]

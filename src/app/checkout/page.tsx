@@ -130,6 +130,12 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (items.length === 0) return;
     setError(null);
+    const cpOk = form.cp.replace(/\D/g, "").length >= 4;
+    const needsShipping = cpOk && (form.provincia === "Capital Federal" || form.provincia === "Buenos Aires");
+    if (needsShipping && (shippingLoading || !selectedQuote)) {
+      setError("Esperá a que se cargue el costo de envío antes de pagar.");
+      return;
+    }
     setIsLoading(true);
 
     const phone = form.phone.replace(/\D/g, "");
@@ -142,11 +148,11 @@ export default function CheckoutPage() {
       unit_price: i.price,
       currency_id: "ARS" as const,
     }));
-    if (selectedQuote && selectedQuote.price > 0) {
+    if (selectedQuote) {
       mpItems.push({
         title: `Envío ${selectedQuote.carrierName}`,
         quantity: 1,
-        unit_price: selectedQuote.price,
+        unit_price: Math.max(0, selectedQuote.price),
         currency_id: "ARS" as const,
       });
     }
@@ -187,11 +193,7 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Error al crear el checkout");
       if (data.init_point) {
-        // Abrir en nueva pestaña evita bucles de redirección con MP Sandbox (Safari/Chrome)
-        const w = window.open(data.init_point, "_blank", "noopener,noreferrer");
-        if (!w || w.closed || typeof w.closed === "undefined") {
-          window.location.href = data.init_point;
-        }
+        window.location.href = data.init_point;
       } else {
         throw new Error("No se obtuvo URL de pago");
       }
@@ -481,11 +483,21 @@ export default function CheckoutPage() {
                     {form.cp.replace(/\D/g, "").length < 4 && (
                       <p className="text-xs text-[var(--brand-black)]/50">Ingresá tu CP para ver el envío</p>
                     )}
+                    {form.cp.replace(/\D/g, "").length >= 4 &&
+                      (form.provincia === "Capital Federal" || form.provincia === "Buenos Aires") &&
+                      shippingLoading && (
+                        <p className="text-xs text-[var(--brand-black)]/50">Calculando envío…</p>
+                      )}
                   </div>
                   {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
                   <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={
+                      isLoading ||
+                      (form.cp.replace(/\D/g, "").length >= 4 &&
+                        (form.provincia === "Capital Federal" || form.provincia === "Buenos Aires") &&
+                        (shippingLoading || !selectedQuote))
+                    }
                     className="mt-5 w-full rounded-xl bg-[var(--brand-cta)] py-4 text-base font-semibold text-[var(--brand-black)] transition-all active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 hover:opacity-95"
                     style={{ fontFamily: "var(--font-subheading)", boxShadow: "var(--shadow-cta)" }}
                   >
@@ -494,18 +506,28 @@ export default function CheckoutPage() {
                   <p className="mt-2 text-center text-xs text-[var(--brand-black)]/50">
                     Pago seguro con Mercado Pago
                   </p>
-                  <p className="mt-2 text-center text-xs text-[var(--brand-black)]/40">
-                    Si usás modo prueba: iniciá sesión en{" "}
-                    <a
-                      href="https://sandbox.mercadopago.com.ar"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline hover:text-[var(--brand-black)]/60"
-                    >
-                      sandbox.mercadopago.com.ar
-                    </a>{" "}
-                    antes de pagar.
-                  </p>
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-center text-xs text-[var(--brand-black)]/40 hover:text-[var(--brand-black)]/60">
+                      Modo prueba: tarjetas y datos
+                    </summary>
+                    <div className="mt-2 rounded-lg bg-[var(--brand-gray)]/80 p-3 text-left text-[11px] text-[var(--brand-black)]/70">
+                      <p className="mb-1 font-medium">Tarjetas de prueba (Argentina):</p>
+                      <p>Visa: 4509 9535 6623 3704 | Master: 5031 7557 3453 0604</p>
+                      <p>CVV: 123 | Vto: 11/25 | Titular: APRO (aprobado)</p>
+                      <p className="mt-1">
+                        Iniciá sesión en{" "}
+                        <a
+                          href="https://sandbox.mercadopago.com.ar"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline"
+                        >
+                          sandbox.mercadopago.com.ar
+                        </a>{" "}
+                        antes de pagar.
+                      </p>
+                    </div>
+                  </details>
                 </div>
               </div>
             </div>

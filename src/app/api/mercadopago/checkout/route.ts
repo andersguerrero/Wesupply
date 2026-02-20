@@ -51,14 +51,12 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Items requeridos" }, { status: 400 });
   }
 
-  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "";
-  if (!baseUrl) {
-    const host = req.headers.get("host") || req.headers.get("x-forwarded-host");
-    const proto = req.headers.get("x-forwarded-proto") || "http";
-    if (host) baseUrl = `${proto === "https" ? "https" : "http"}://${host}`;
-  }
+  // Usar el host de la petición para back_urls (evita 404 si NEXT_PUBLIC_SITE_URL apunta a otro deploy)
+  const host = req.headers.get("host") || req.headers.get("x-forwarded-host");
+  const proto = req.headers.get("x-forwarded-proto") || "https";
+  let baseUrl = host ? `${proto === "https" ? "https" : "http"}://${host}` : process.env.NEXT_PUBLIC_SITE_URL?.trim() || "";
   if (!baseUrl || !baseUrl.startsWith("http")) {
-    baseUrl = "http://localhost:3000";
+    baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
   }
   const base = baseUrl.replace(/\/$/, "");
   const successUrl = base + "/checkout/success";

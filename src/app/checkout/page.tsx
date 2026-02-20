@@ -6,10 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useCart } from "@/components/CartContext";
 import CartItem from "@/components/CartItem";
-import PaymentBrick from "@/components/PaymentBrick";
 import { formatMoney } from "@/lib/formatMoney";
-
-const USE_BRICK = !!process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY?.trim();
 
 type ShippingQuote = {
   carrierId: string;
@@ -81,9 +78,6 @@ export default function CheckoutPage() {
   const [selectedQuote, setSelectedQuote] = useState<ShippingQuote | null>(null);
   const [shippingLoading, setShippingLoading] = useState(false);
   const [shippingError, setShippingError] = useState<string | null>(null);
-  const [paymentStep, setPaymentStep] = useState<"form" | "brick">("form");
-  const [preferenceId, setPreferenceId] = useState<string | null>(null);
-  const [brickAmount, setBrickAmount] = useState(0);
 
   const update = (field: keyof CheckoutForm, value: string) => {
     setForm((f) => ({ ...f, [field]: value }));
@@ -192,12 +186,8 @@ export default function CheckoutPage() {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Error al crear el checkout");
-      const total = subtotal + (selectedQuote?.price ?? 0);
-      if (USE_BRICK && data.preference_id) {
-        setPreferenceId(data.preference_id);
-        setBrickAmount(total);
-        setPaymentStep("brick");
-      } else if (data.init_point) {
+      if (data.init_point) {
+        // Abrir en nueva pestaña evita bucles de redirección con MP Sandbox (Safari/Chrome)
         const w = window.open(data.init_point, "_blank", "noopener,noreferrer");
         if (!w || w.closed || typeof w.closed === "undefined") {
           window.location.href = data.init_point;
@@ -237,48 +227,6 @@ export default function CheckoutPage() {
 
   const inputClass =
     "w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-[15px] transition-colors placeholder:text-black/40 focus:border-[var(--brand-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--brand-primary)]";
-
-  if (paymentStep === "brick" && preferenceId) {
-    return (
-      <>
-        <Header />
-        <main className="min-h-screen bg-[var(--brand-gray)] px-4 py-6 sm:py-10">
-          <div className="mx-auto max-w-2xl">
-            <button
-              type="button"
-              onClick={() => {
-                setPaymentStep("form");
-                setPreferenceId(null);
-              }}
-              className="mb-4 text-sm text-[var(--brand-black)]/60 hover:text-[var(--brand-black)]"
-            >
-              ← Volver
-            </button>
-            <div className="rounded-2xl bg-white p-6 shadow-sm">
-              <h2
-                className="mb-4 text-lg font-semibold text-[var(--brand-black)]"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                Pago con tarjeta
-              </h2>
-              <p className="mb-4 text-sm text-[var(--brand-black)]/70">
-                Total a pagar: {formatMoney(brickAmount, "ARS")}
-              </p>
-              <div className="min-h-[400px]">
-                <PaymentBrick
-                  preferenceId={preferenceId}
-                  amount={brickAmount}
-                  onError={(msg) => setError(msg)}
-                />
-              </div>
-              {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </>
-    );
-  }
 
   return (
     <>

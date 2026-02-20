@@ -83,6 +83,9 @@ export async function POST(req: NextRequest) {
       pending: pendingUrl,
     },
     notification_url: webhookUrl,
+    payment_methods: {
+      excluded_payment_types: [{ id: "account_money" }],
+    },
   };
 
   if (body.payer && typeof body.payer === "object") {
@@ -146,7 +149,8 @@ export async function POST(req: NextRequest) {
     }
 
     const initPoint = data.sandbox_init_point ?? data.init_point;
-    return Response.json({ init_point: initPoint });
+    const preferenceId = data.id ?? null;
+    return Response.json({ init_point: initPoint, preference_id: preferenceId });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Error al conectar con Mercado Pago";
     return Response.json({ error: msg }, { status: 500 });

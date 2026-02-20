@@ -21,9 +21,12 @@ Debe devolver `200` con `ready: true` y todas las verificaciones en verde:
 | `blob` | `BLOB_READ_WRITE_TOKEN` configurado para persistir pedidos |
 | `webhookUrl` | URL del webhook (debe ser accesible públicamente) |
 
+**Para evitar "Too many redirects" en Sandbox:** configurá `NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY` (Public Key de tu app MP). Así el checkout usa el formulario embebido (Payment Brick) en lugar de redirigir a MP.
+
 **Variables obligatorias en Vercel:**
 
 - `MERCADOPAGO_ACCESS_TOKEN` — Token de producción o sandbox según el caso
+- `NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY` — Public Key (para pago con tarjeta embebido, evita redirects)
 - `NEXT_PUBLIC_SITE_URL` — URL real del deploy, ej: `https://tu-proyecto.vercel.app` (sin `/` final)
 - `BLOB_READ_WRITE_TOKEN` — Se agrega al crear el Blob Store
 - El webhook es alcanzable porque Vercel expone el sitio por HTTPS

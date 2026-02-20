@@ -52,6 +52,7 @@ type CartContextValue = {
   addItem: (input: AddItemInput) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
   subtotal: number;
   itemCount: number;
   isOpen: boolean;
@@ -131,6 +132,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const openCart = useCallback(() => setIsOpen(true), []);
   const closeCart = useCallback(() => setIsOpen(false), []);
+  const clearCart = useCallback(() => persist([]), [persist]);
 
   const checkout = useCallback(async () => {
     if (items.length === 0) return;
@@ -170,6 +172,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     addItem,
     removeItem,
     updateQuantity,
+    clearCart,
     subtotal,
     itemCount,
     isOpen,

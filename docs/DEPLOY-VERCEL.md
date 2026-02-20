@@ -4,6 +4,32 @@ Guía para desplegar WESUPPLY en Vercel con persistencia en Vercel Blob.
 
 ---
 
+## Checklist para producción
+
+Después del deploy, verificá que todo funcione llamando a:
+
+```
+GET /api/health/readiness
+```
+
+Debe devolver `200` con `ready: true` y todas las verificaciones en verde:
+
+| Check | Descripción |
+|-------|-------------|
+| `mercadopago` | `MERCADOPAGO_ACCESS_TOKEN` configurado |
+| `siteUrl` | `NEXT_PUBLIC_SITE_URL` correcta (https, sin `/` final) |
+| `blob` | `BLOB_READ_WRITE_TOKEN` configurado para persistir pedidos |
+| `webhookUrl` | URL del webhook (debe ser accesible públicamente) |
+
+**Variables obligatorias en Vercel:**
+
+- `MERCADOPAGO_ACCESS_TOKEN` — Token de producción o sandbox según el caso
+- `NEXT_PUBLIC_SITE_URL` — URL real del deploy, ej: `https://tu-proyecto.vercel.app` (sin `/` final)
+- `BLOB_READ_WRITE_TOKEN` — Se agrega al crear el Blob Store
+- El webhook es alcanzable porque Vercel expone el sitio por HTTPS
+
+---
+
 ## 1. Requisitos previos
 
 - Cuenta en [Vercel](https://vercel.com)

@@ -60,8 +60,11 @@ export async function POST(req: NextRequest) {
   if (!baseUrl || !baseUrl.startsWith("http")) {
     baseUrl = "http://localhost:3000";
   }
-  const returnUrl = baseUrl.replace(/\/$/, "") + "/";
-  const webhookUrl = baseUrl.replace(/\/$/, "") + "/api/mercadopago/webhook";
+  const base = baseUrl.replace(/\/$/, "");
+  const successUrl = base + "/checkout/success";
+  const failureUrl = base + "/checkout/failure";
+  const pendingUrl = base + "/checkout/failure";
+  const webhookUrl = base + "/api/mercadopago/webhook";
   const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/i.test(baseUrl);
 
   const preference: Record<string, unknown> = {
@@ -75,9 +78,9 @@ export async function POST(req: NextRequest) {
       };
     }),
     back_urls: {
-      success: returnUrl,
-      failure: returnUrl,
-      pending: returnUrl,
+      success: successUrl,
+      failure: failureUrl,
+      pending: pendingUrl,
     },
     notification_url: webhookUrl,
   };

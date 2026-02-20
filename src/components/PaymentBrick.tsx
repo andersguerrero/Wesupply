@@ -35,7 +35,7 @@ export default function PaymentBrick({ preferenceId, amount, onError }: PaymentB
       }}
       customization={{
         paymentMethods: {
-          mercadoPago: "disabled",
+          mercadoPago: [],
           ticket: "all",
           creditCard: "all",
           debitCard: "all",

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CintasPage() {
-  const category = getCategoryBySlug("cintas");
+  const category = await getCategoryBySlug("cintas");
   if (!category) return null;
   const products = await getProductsByHandles(category.productHandles);
   return <CategoryLanding category={category} products={products} />;

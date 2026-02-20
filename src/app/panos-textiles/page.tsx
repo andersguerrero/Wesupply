@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PanosTextilesPage() {
-  const category = getCategoryBySlug("panos-textiles");
+  const category = await getCategoryBySlug("panos-textiles");
   if (!category) return null;
   const products = await getProductsByHandles(category.productHandles);
   return <CategoryLanding category={category} products={products} />;

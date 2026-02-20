@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const products = readContent<Array<{ handle: string; weightKg?: number; heightCm?: number; widthCm?: number; lengthCm?: number }>>("products");
+    const products = await readContent<Array<{ handle: string; weightKg?: number; heightCm?: number; widthCm?: number; lengthCm?: number }>>("products");
     const overrides: Record<string, { weightKg?: number; heightCm?: number; widthCm?: number; lengthCm?: number }> = {};
     if (products && Array.isArray(products)) {
       for (const p of products) {
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     const { totalWeightKg, paquetesString } = computeShipmentFromCart(items, Object.keys(overrides).length ? overrides : undefined);
     const allQuotes: ShippingQuoteOption[] = [];
 
-    const zonePrices = readContent<{ cercana?: number; media?: number; lejana?: number }>("shipping-zones");
+    const zonePrices = await readContent<{ cercana?: number; media?: number; lejana?: number }>("shipping-zones");
     const isCabaOrGba = provinciaIso === "C" || provinciaIso === "B";
 
     if (isCabaOrGba) {

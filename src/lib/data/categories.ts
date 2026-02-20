@@ -39,8 +39,8 @@ import { getNavCategories } from "@/lib/content/loaders";
 import { getCategoriesFromContent } from "@/lib/content/loaders";
 
 /** Categorías estáticas de respaldo */
-function getStaticCategories(): CategoryMeta[] {
-  const navCats = getNavCategories();
+async function getStaticCategories(): Promise<CategoryMeta[]> {
+  const navCats = await getNavCategories();
   return [
   {
     slug: "cintas",
@@ -101,8 +101,8 @@ function getStaticCategories(): CategoryMeta[] {
 }
 
 /** Categorías: prioriza content/categories.json si existe */
-export function getCategories(): CategoryMeta[] {
-  const fromContent = getCategoriesFromContent();
+export async function getCategories(): Promise<CategoryMeta[]> {
+  const fromContent = await getCategoriesFromContent();
   if (fromContent && fromContent.length > 0) {
     return fromContent.map((c) => ({
       ...c,
@@ -112,9 +112,6 @@ export function getCategories(): CategoryMeta[] {
   }
   return getStaticCategories();
 }
-
-/** @deprecated Usar getCategories() para datos actualizados desde admin */
-export const CATEGORIES: CategoryMeta[] = getStaticCategories();
 
 /** Industrias para landing Soluciones */
 export const INDUSTRIES = [
@@ -157,8 +154,8 @@ export const VOLUME_PACKS = [
   { name: "Pack 50", discount: 18, label: "50+ unidades", href: "/packs", productsHref: "/envio" },
 ];
 
-export function getCategoryBySlug(slug: string): CategoryMeta | undefined {
-  const fromContent = getCategoriesFromContent();
+export async function getCategoryBySlug(slug: string): Promise<CategoryMeta | undefined> {
+  const fromContent = await getCategoriesFromContent();
   if (fromContent) {
     const contentCat = fromContent.find((c) => c.slug === slug);
     if (contentCat) {
@@ -171,5 +168,6 @@ export function getCategoryBySlug(slug: string): CategoryMeta | undefined {
       } as CategoryMeta;
     }
   }
-  return getCategories().find((c) => c.slug === slug);
+  const cats = await getCategories();
+  return cats.find((c) => c.slug === slug);
 }

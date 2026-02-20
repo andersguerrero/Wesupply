@@ -5,8 +5,8 @@ type Subscriber = { email: string; subscribedAt: string; message?: string };
 
 const NEWSLETTER_KEY = "newsletter-subscribers";
 
-function getSubscribers(): Subscriber[] {
-  const data = readContent<Subscriber[]>(NEWSLETTER_KEY);
+async function getSubscribers(): Promise<Subscriber[]> {
+  const data = await readContent<Subscriber[]>(NEWSLETTER_KEY);
   return Array.isArray(data) ? data : [];
 }
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const subscribers = getSubscribers();
+  const subscribers = await getSubscribers();
   const exists = subscribers.some((s) => s.email === email);
   if (exists) {
     return Response.json(
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   });
 
   try {
-    writeContent(NEWSLETTER_KEY, subscribers);
+    await writeContent(NEWSLETTER_KEY, subscribers);
   } catch (err) {
     console.error("Newsletter write error:", err);
     return Response.json(

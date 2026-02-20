@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   if (!key || !CONTENT_KEYS.includes(key as (typeof CONTENT_KEYS)[number])) {
     return Response.json({ error: "Clave inválida" }, { status: 400 });
   }
-  const data = readContent(key);
+  const data = await readContent(key);
   return Response.json(data ?? {});
 }
 
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Body inválido" }, { status: 400 });
   }
   try {
-    writeContent(key, body);
+    await writeContent(key, body);
     return Response.json({ ok: true });
   } catch (err) {
     return Response.json(

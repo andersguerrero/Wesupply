@@ -9,8 +9,9 @@ const MAIN_CATEGORY_SLUGS = ["cintas", "panos-textiles", "tanzas", "etiquetas", 
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const mainCategories = getCategories().filter((c) =>
+export default async function Home() {
+  const categories = await getCategories();
+  const mainCategories = categories.filter((c) =>
     MAIN_CATEGORY_SLUGS.includes(c.slug as (typeof MAIN_CATEGORY_SLUGS)[number])
   );
 

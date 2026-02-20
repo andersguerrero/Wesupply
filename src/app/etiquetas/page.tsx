@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EtiquetasPage() {
-  const category = getCategoryBySlug("etiquetas");
+  const category = await getCategoryBySlug("etiquetas");
   if (!category) return null;
   const products = await getProductsByHandles(category.productHandles);
   return <CategoryLanding category={category} products={products} />;

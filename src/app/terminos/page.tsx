@@ -51,7 +51,7 @@ const DEFAULT_TERMS = (
 );
 
 export default async function TerminosPage() {
-  const site = getSiteContent();
+  const site = await getSiteContent();
   const termsContent = site?.termsContent?.trim();
 
   return (

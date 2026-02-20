@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   if (!isAuthenticated(req)) {
     return Response.json({ error: "No autorizado" }, { status: 401 });
   }
-  const data = readContent<{ email: string; subscribedAt: string }[]>("newsletter-subscribers");
+  const data = await readContent<{ email: string; subscribedAt: string }[]>("newsletter-subscribers");
   const subscribers = Array.isArray(data) ? data : [];
   return Response.json(subscribers);
 }

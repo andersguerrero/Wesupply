@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProteccionPage() {
-  const category = getCategoryBySlug("proteccion");
+  const category = await getCategoryBySlug("proteccion");
   if (!category) return null;
   const products = await getProductsByHandles(category.productHandles);
   return <CategoryLanding category={category} products={products} />;

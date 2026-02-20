@@ -15,6 +15,6 @@ export async function GET(req: NextRequest) {
   if (!isAuthenticated(req)) {
     return Response.json({ error: "No autorizado" }, { status: 401 });
   }
-  const orders = readContent<StoredOrder[]>("orders") ?? [];
+  const orders = (await readContent<StoredOrder[]>("orders")) ?? [];
   return Response.json(orders);
 }

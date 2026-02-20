@@ -3,7 +3,7 @@ import { getProductByHandle } from "@/lib/data/products";
 import ReviewsCarousel from "./ReviewsCarousel";
 
 export default async function ReviewsSection() {
-  const reviews = getAllReviews();
+  const reviews = await getAllReviews();
   const uniqueHandles = [...new Set(reviews.map((r) => r.productHandle))];
   const productMap = new Map<string, { image?: string; title: string }>();
   for (const handle of uniqueHandles) {

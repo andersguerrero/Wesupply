@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ExhibidoresPage() {
-  const category = getCategoryBySlug("exhibidores");
+  const category = await getCategoryBySlug("exhibidores");
   if (!category) return null;
   const products = await getProductsByHandles(category.productHandles);
   return <CategoryLanding category={category} products={products} />;

@@ -33,8 +33,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteContent = getSiteContent();
-  const navCategories = getNavCategories();
+  const [siteContent, navCategories] = await Promise.all([getSiteContent(), getNavCategories()]);
   return (
     <html lang="es-AR" className={`${syne.variable} ${oswald.variable}`}>
       <body className="antialiased">

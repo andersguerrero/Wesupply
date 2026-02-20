@@ -72,8 +72,8 @@ function makeProduct(p: CatalogProduct): Product {
 }
 
 /** Catálogo activo: content/ o estático */
-function getCatalog() {
-  const cats = getNavCategories();
+async function getCatalog() {
+  const cats = await getNavCategories();
   return cats.flatMap((cat) =>
     cat.products.map((p) =>
       makeProduct({
@@ -85,15 +85,17 @@ function getCatalog() {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  if (USE_MOCK) return getCatalog();
-  return getCatalog();
+  const catalog = await getCatalog();
+  return catalog;
 }
 
 export async function getProductByHandle(handle: string): Promise<Product | null> {
-  return getCatalog().find((p) => p.handle === handle) ?? null;
+  const catalog = await getCatalog();
+  return catalog.find((p) => p.handle === handle) ?? null;
 }
 
 export async function getProductsByHandles(handles: string[]): Promise<Product[]> {
+  const catalog = await getCatalog();
   const set = new Set(handles);
-  return getCatalog().filter((p) => set.has(p.handle));
+  return catalog.filter((p) => set.has(p.handle));
 }

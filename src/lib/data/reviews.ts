@@ -140,22 +140,22 @@ function computeSummary(reviews: Review[]): ReviewSummary {
   };
 }
 
-function getReviewsFromContent(): Review[] | null {
-  const data = readContent<Review[]>("reviews");
+async function getReviewsFromContent(): Promise<Review[] | null> {
+  const data = await readContent<Review[]>("reviews");
   if (data && Array.isArray(data) && data.length > 0) return data;
   return null;
 }
 
 /** Todas las reseñas para la home (carousel) */
-export function getAllReviews(): Review[] {
-  const fromContent = getReviewsFromContent();
+export async function getAllReviews(): Promise<Review[]> {
+  const fromContent = await getReviewsFromContent();
   return fromContent ?? MOCK_REVIEWS;
 }
 
 export async function getReviewsByProductHandle(
   productHandle: string
 ): Promise<Review[]> {
-  const reviews = getAllReviews();
+  const reviews = await getAllReviews();
   return reviews.filter((r) => r.productHandle === productHandle);
 }
 

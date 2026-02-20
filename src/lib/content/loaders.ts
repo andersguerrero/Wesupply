@@ -103,10 +103,10 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 function productsToNavCategories(
-  products: (ProductPreview & { categorySlug?: string })[]
+  products: (ProductPreview & { categorySlug?: string })[],
+  contentCats: EditableCategory[] | null
 ): NavCategory[] {
   const slugs = ["cintas", "panos-textiles", "tanzas", "etiquetas", "embalaje", "exhibidores"] as const;
-  const contentCats = getCategoriesFromContent();
   return slugs.map((slug) => {
     const catProducts = products.filter((p) => p.categorySlug === slug);
     const fallback = NAV_CATEGORIES.find((c) => c.slug === slug);
@@ -121,10 +121,13 @@ function productsToNavCategories(
 }
 
 /** Productos agrupados por categoría (para nav y listados) */
-export function getNavCategories(): NavCategory[] {
-  const stored = readContent<ProductPreview[]>("products");
+export async function getNavCategories(): Promise<NavCategory[]> {
+  const [stored, contentCats] = await Promise.all([
+    readContent<ProductPreview[]>("products"),
+    getCategoriesFromContent(),
+  ]);
   if (stored && Array.isArray(stored) && stored.length > 0) {
-    return productsToNavCategories(stored);
+    return productsToNavCategories(stored, contentCats);
   }
   return NAV_CATEGORIES.map((c) => ({
     slug: c.slug,
@@ -135,14 +138,14 @@ export function getNavCategories(): NavCategory[] {
 }
 
 /** Todos los handles de productos */
-export function getAllProductHandles(): string[] {
-  const cats = getNavCategories();
+export async function getAllProductHandles(): Promise<string[]> {
+  const cats = await getNavCategories();
   return cats.flatMap((c) => c.products.map((p) => p.handle));
 }
 
 /** Contenido del sitio (hero, footer, etc.) */
-export function getSiteContent(): SiteContent {
-  const stored = readContent<SiteContent>("site");
+export async function getSiteContent(): Promise<SiteContent> {
+  const stored = await readContent<SiteContent>("site");
   if (stored && typeof stored === "object") return stored;
   return {};
 }
@@ -162,8 +165,8 @@ export type EditableCategory = {
 };
 
 /** Categorías completas (hero, faq, etc.) desde content o null */
-export function getCategoriesFromContent(): EditableCategory[] | null {
-  const stored = readContent<EditableCategory[]>("categories");
+export async function getCategoriesFromContent(): Promise<EditableCategory[] | null> {
+  const stored = await readContent<EditableCategory[]>("categories");
   if (stored && Array.isArray(stored)) return stored;
   return null;
 }

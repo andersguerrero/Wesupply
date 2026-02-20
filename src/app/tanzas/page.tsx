@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TanzasPage() {
-  const category = getCategoryBySlug("tanzas");
+  const category = await getCategoryBySlug("tanzas");
   if (!category) return null;
   const products = await getProductsByHandles(category.productHandles);
   return <CategoryLanding category={category} products={products} />;

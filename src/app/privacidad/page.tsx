@@ -57,7 +57,7 @@ const DEFAULT_PRIVACY = (
 );
 
 export default async function PrivacidadPage() {
-  const site = getSiteContent();
+  const site = await getSiteContent();
   const privacyContent = site?.privacyContent?.trim();
 
   return (

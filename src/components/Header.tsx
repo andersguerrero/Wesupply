@@ -44,7 +44,7 @@ export default function Header() {
   const site = useSiteContent();
   const baseNav = site?.navCategories ?? FALLBACK_NAV;
   const navCategories =
-    site?.headerNav?.length > 0
+    (site?.headerNav?.length ?? 0) > 0 && site?.headerNav
       ? buildNavFromHeaderNav(site.headerNav, baseNav)
       : [
           ...baseNav,

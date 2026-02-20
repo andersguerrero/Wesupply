@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     return new Response(null, { status: 200 });
   }
 
-  const existing = readContent<StoredOrder[]>("orders") ?? [];
+  const existing = (await readContent<StoredOrder[]>("orders")) ?? [];
   if (existing.some((o) => o.paymentId === paymentId)) {
     return new Response(null, { status: 200 });
   }
@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
         });
         const merchantOrder = await orderRes.json();
         if (orderRes.ok && Array.isArray(merchantOrder.items)) {
-          items = merchantOrder.items.map((i: { title?: string; quantity?: number; unit_price?: number }) => ({
+          items = merchantOrder.items.map((i: { title?: string; id?: string; quantity?: number; unit_price?: number }) => ({
             title: String(i.title ?? i.id ?? "Producto"),
             quantity: Number(i.quantity) || 1,
             unit_price: Number(i.unit_price) || 0,
@@ -149,9 +149,9 @@ export async function GET(req: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    const orders = readContent<StoredOrder[]>("orders") ?? [];
+    const orders = (await readContent<StoredOrder[]>("orders")) ?? [];
     orders.unshift(order);
-    writeContent("orders", orders);
+    await writeContent("orders", orders);
   } catch {
     // silenciar errores para no romper reintentos de MP
   }

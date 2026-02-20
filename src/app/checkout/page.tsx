@@ -512,10 +512,12 @@ export default function CheckoutPage() {
                     </summary>
                     <div className="mt-2 rounded-lg bg-[var(--brand-gray)]/80 p-3 text-left text-[11px] text-[var(--brand-black)]/70">
                       <p className="mb-1 font-medium">Tarjetas de prueba (Argentina):</p>
-                      <p>Visa: 4509 9535 6623 3704 | Master: 5031 7557 3453 0604</p>
-                      <p>CVV: 123 | Vto: 11/25 | Titular: APRO (aprobado)</p>
+                      <p>Master: 5031 7557 3453 0604 | Visa: 4509 9535 6623 3704</p>
+                      <p>CVV: 123 | Vto: 11/30</p>
+                      <p className="mt-1 font-medium">Importante para que habilite el botón:</p>
+                      <p>Titular: <strong>APRO</strong> | DNI: <strong>12345678</strong></p>
                       <p className="mt-1">
-                        Iniciá sesión en{" "}
+                        Usá ventana incógnito e iniciá sesión en{" "}
                         <a
                           href="https://sandbox.mercadopago.com.ar"
                           target="_blank"
@@ -524,7 +526,7 @@ export default function CheckoutPage() {
                         >
                           sandbox.mercadopago.com.ar
                         </a>{" "}
-                        antes de pagar.
+                        con tu cuenta de prueba comprador.
                       </p>
                     </div>
                   </details>

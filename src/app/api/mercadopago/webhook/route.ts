@@ -26,14 +26,31 @@ export type StoredOrder = {
   createdAt: string;
 };
 
+function getTopicAndId(req: NextRequest): { topic: string | null; id: string | null } {
+  const { searchParams } = new URL(req.url);
+  let topic = searchParams.get("topic");
+  let id = searchParams.get("id");
+  if (topic && id) return { topic, id };
+  return { topic: null, id: null };
+}
+
+async function getTopicAndIdFromPost(req: NextRequest): Promise<{ topic: string | null; id: string | null }> {
+  try {
+    const body = await req.json();
+    const type = body?.type ?? body?.topic;
+    const dataId = body?.data?.id ?? body?.id;
+    if (type === "payment" && dataId) return { topic: "payment", id: String(dataId) };
+    return { topic: null, id: null };
+  } catch {
+    return { topic: null, id: null };
+  }
+}
+
 /**
- * IPN de Mercado Pago: recibe GET con ?topic=payment&id=123456
+ * IPN/Webhook de Mercado Pago: recibe GET (?topic=payment&id=xxx) o POST (body JSON).
  * Responder 200 rápido; luego procesar y guardar el pedido.
  */
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const topic = searchParams.get("topic");
-  const id = searchParams.get("id");
+async function handleNotification(topic: string | null, id: string | null) {
 
   if (topic !== "payment" || !id) {
     return new Response(null, { status: 200 });
@@ -157,4 +174,18 @@ export async function GET(req: NextRequest) {
   }
 
   return new Response(null, { status: 200 });
+}
+
+export async function GET(req: NextRequest) {
+  const { topic, id } = getTopicAndId(req);
+  return handleNotification(topic, id);
+}
+
+export async function POST(req: NextRequest) {
+  const { topic, id } = await getTopicAndIdFromPost(req);
+  if (!topic || !id) {
+    const { topic: t, id: i } = getTopicAndId(req);
+    return handleNotification(t, i);
+  }
+  return handleNotification(topic, id);
 }
